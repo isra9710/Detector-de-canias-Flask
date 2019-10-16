@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="{{ url_for ('static', filename='css/estilo.css') }}" rel="stylesheet" />
+  <script src="{{ url_for('static', filename='js/funciones.js') }}"></script>
+	<title>Inicio de sesión</title>
+</head>
+<body>
+  <form autocomplete='off' class='form' action="/crud">
+    <div class='control'>
+      <h1>
+        Bienvenido, inicia sesión por favor
+      </h1>
+    </div>
+    <div class='control block-cube block-input'>
+      <input name='username' placeholder='Usuario' type='text'>
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+    </div>
+    <div class='control block-cube block-input'>
+      <input name='password' placeholder='Contraseña' type='password'>
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+    </div>
+    <button class='btn block-cube block-cube-hover' type='button'>
+      <div class='bg-top'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg-right'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='bg'>
+        <div class='bg-inner'></div>
+      </div>
+      <div class='text'>
+        Iniciar sesión
+      </div>
+    </button>
+  </form>
+</div>
+</body>
+</html>
