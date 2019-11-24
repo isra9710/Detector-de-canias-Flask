@@ -23,9 +23,9 @@ $("form").submit(function(e) {
 
 $("form#addUser").submit(function() {
   var user = {};
-  var nameInput = $('input[name="name"]').val().trim();
-  var addressInput = $('input[name="address"]').val().trim();
-  var ageInput = $('input[name="age"]').val().trim();
+  var nameInput = $('input[name="nombre"]').val().trim();
+  var addressInput = $('input[name="contra"]').val().trim();
+  var ageInput = $('input[name="tipo"]').val().trim();
   if (nameInput && addressInput && ageInput) {
     $(this).serializeArray().map(function(data) {
       user[data.name] = data.value;
@@ -49,16 +49,16 @@ function editUser(id) {
     if (user.id == id) {
       $(".modal-body").empty().append(`
                 <form id="updateUser" action="">
-                    <label for="name">Nombre</label>
-                    <input class="form-control" type="text" name="name" value="${user.name}"/>
-                    <label for="address">Dirección</label>
-                    <input class="form-control" type="text" name="address" value="${user.address}"/>
-                    <label for="age">Edad</label>
-                    <input class="form-control" type="number" name="age" value="${user.age}" min=10 max=100/>
+                    <label for="nombre">Nombre</label>
+                    <input class="form-control" type="text" name="nombre" value="${user.name}"/>
+                    <label for="contra">Contraseña</label>
+                    <input class="form-control" type="text" name="contra" value="${user.address}"/>
+                    <label for="tipo">Tipo de usuario</label>
+                    <input class="form-control" type="text" name="tipo" value="${user.age}" />
             `);
       $(".modal-footer").empty().append(`
-                    <button type="button" type="submit" class="btn btn-primary" onClick="updateUser(${id})">Save changes</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" type="submit" class="btn btn-primary" onClick="updateUser(${id})">Guardar cambios</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 </form>
             `);
     }
@@ -85,22 +85,22 @@ function updateUser(id) {
     if (user.id == id) {
       $("#updateUser").children("input").each(function() {
         var value = $(this).val();
-        var attr = $(this).attr("name");
-        if (attr == "name") {
+        var attr = $(this).attr("nombre");
+        if (attr == "nombre") {
           user.name = value;
-        } else if (attr == "address") {
+        } else if (attr == "contra") {
           user.address = value;
-        } else if (attr == "age") {
+        } else if (attr == "tipo") {
           user.age = value;
         }
       });
       users.splice(i, 1);
       users.splice(user.id - 1, 0, user);
       $("#userTable #user-" + user.id).children(".userData").each(function() {
-        var attr = $(this).attr("name");
-        if (attr == "name") {
+        var attr = $(this).attr("nombre");
+        if (attr == "nombre") {
           $(this).text(user.name);
-        } else if (attr == "address") {
+        } else if (attr == "contra") {
           $(this).text(user.address);
         } else {
           $(this).text(user.age);
@@ -122,9 +122,9 @@ function flashMessage(msg) {
 function appendToUsrTable(user) {
   $("#userTable > tbody:last-child").append(`
         <tr id="user-${user.id}">
-            <td class="userData" name="name">${user.name}</td>
-            '<td class="userData" name="address">${user.address}</td>
-            '<td id="tdAge" class="userData" name="age">${user.age}</td>
+            <td class="userData" name="nombre">${user.name}</td>
+            '<td class="userData" name="contra">${user.contra}</td>
+            '<td id="tdAge" class="userData" name="tipo">${user.tipo}</td>
             '<td align="center">
                 <button class="btn btn-success form-control" onClick="editUser(${user.id})" data-toggle="modal" data-target="#myModal")">Editar</button>
             </td>

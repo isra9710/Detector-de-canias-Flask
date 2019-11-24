@@ -1,6 +1,8 @@
 ##Este es el archivo que contiene la importancia de clases y algunas configuraciones que tienen que ir en el main, esto con la finalidad de reducir codigo
 import os
 from models.Producto import Producto
+from models.Usuario import Usuario
+from models.Resultado import Resultado
 
 
 class Config(object):

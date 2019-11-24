@@ -6,14 +6,21 @@
 	<title>Inicio de sesión</title>
 </head>
 <body>
-  <form autocomplete='off' class='form' action="/crud">
+    {% with messages= get_flashed_messages() %}
+    {% if messages %}
+      {% for meessage in messages %}
+        <center><h3>{{ meessage }}</h3> </center>
+          {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <form method="POST" autocomplete='off' class='form' action="/login">
     <div class='control'>
       <h1>
-        Bienvenido, inicia sesión por favor
+        BIENVENIDO
       </h1>
     </div>
     <div class='control block-cube block-input'>
-      <input name='username' placeholder='Usuario' type='text'>
+      <input name='usuario' placeholder='Usuario' type='text'>
       <div class='bg-top'>
         <div class='bg-inner'></div>
       </div>
@@ -25,7 +32,7 @@
       </div>
     </div>
     <div class='control block-cube block-input'>
-      <input name='password' placeholder='Contraseña' type='password'>
+      <input name='contra' placeholder='Contraseña' type='password'>
       <div class='bg-top'>
         <div class='bg-inner'></div>
       </div>
@@ -36,7 +43,7 @@
         <div class='bg-inner'></div>
       </div>
     </div>
-    <button class='btn block-cube block-cube-hover' type='button'>
+    <button class='btn block-cube block-cube-hover' type='submit>
       <div class='bg-top'>
         <div class='bg-inner'></div>
       </div>
@@ -51,6 +58,13 @@
       </div>
     </button>
   </form>
+  <style>
+  body {
+  background: #2c3e50;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2c3e50, #2c3e50);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2c3e50, #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}</style>
 </div>
 </body>
 </html>
