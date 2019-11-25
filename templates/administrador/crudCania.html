@@ -17,10 +17,11 @@
                   {% endwith %}
                   <div class="card card-body">
                       <h3>Agregar experimento</h3>
-                      <form action="/agregarUsuario" method="POST" onsubmit="return check();">
+                      <form action="/experimento" method="POST" enctype="multipart/form-data">
                       <div class="form-group">
-                      <input class="form-control" type="file" id="file"/>
-                    </div>
+                          <input type='file' name="file" id="file" onchange="readURL(this);" required/>
+                          <img id="blah" src="#" alt="your image" />
+                      </div>
                       <button class="btn btn-primary btn-block">      
                         Hacer Experimento 
                       </button>
@@ -74,5 +75,8 @@
               }</style>
             
             {% endblock %}
+            <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+            <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+            <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
     </body>
 </html>

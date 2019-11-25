@@ -1,0 +1,9 @@
+html, body { height: 100%; }
+.form-group {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.container {
+    display: inline-block;
+}

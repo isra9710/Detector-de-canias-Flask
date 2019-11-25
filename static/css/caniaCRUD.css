@@ -16,8 +16,8 @@ html {
   
   .drop-zone, .drop-zone [class^="success-"], .timer-bar-wrapper {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 70%;
+    left: 70%;
     -webkit-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
   }

@@ -6,28 +6,30 @@
     <!-- BOOSTRAP 4 -->
     <link rel="stylesheet" href="https://bootswatch.com/4/materia/bootstrap.min.css">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
-    <script type="text/javascript" language="JavaScript">
-      function check() {
-      document.getElementById("paramfile").value = document.filea.nomarchivo.value;
+    <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    <script >function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
       
-      var ext = document.filea.nomarchivo.value;
-      ext = ext.substring(ext.length-3,ext.length);
-      ext = ext.toLowerCase();
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
       
-      if(ext != 'jpg') {
-      alert('El archivo que seleccionaste es de .'+ext+
-      ', por favor selecciona un archivo con extensión .jpg');
-      return false; }
-      else
-      return true; }
-      
-      </script>
-  </head>
+            reader.readAsDataURL(input.files[0]);
+        }
+      }</script>
+    </head>
   <body>
 
     <!-- NAVIGATION  -->
     <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="/homeAdmin">Home Administrador</a>
+      <a class="navbar-brand" href="/homeAdmin">Página principal</a>
     </nav>
 
     <div class="container pt-4">
