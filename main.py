@@ -11,7 +11,7 @@ import argparse
 import imutils
 import cv2
 from matplotlib import pyplot as plt
-
+import pdfkit
 app = Flask(__name__)
 SECRET_KEY = "my_secret_key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/cania'  # conexion con la base de datos
@@ -45,11 +45,11 @@ def login():
         return redirect((url_for('index')))
 
 
-@app.route("/logout")
+@app.route("/logout")#Decorador para cerrar sesión
 def logout():
-    session.pop('username')
-    session.pop('id')
-    session.pop('tipo')
+    session.pop('username')#Destruye todos los datos
+    session.pop('id')#Generados durante
+    session.pop('tipo')#La sesión
     return redirect((url_for('index')))
 
 
@@ -285,7 +285,12 @@ def eliminarExp(id):
 
 @app.route("/agregaRep", methods=['GET','POST'])
 def agregaRep():
-    print("Hola")
+    tipo = session['tipo']
+    if tipo == "Administrador":
+        return render_template("administrador/fechaR.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+    else:
+        return render_template("usuario/fechaR.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+
     return "hola"
 
 
