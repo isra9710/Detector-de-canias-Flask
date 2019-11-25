@@ -1,0 +1,60 @@
+{% extends "administrador/layCan.html" %}
+{% block body %}
+
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card card-body">
+        <form action="/editarExp" method="POST">
+          <div class="form-group">
+            <p>ID resultado</p>
+            <input type="text" name="id" value="{{resultado.idResultado}}" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+              <p>ID usuario</p>
+            <input type="text" name="idUsuario" value="{{resultado.idUsuario}}" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+              <p>ID imagen</p>
+                <input type="text" name="idImagen" value="{{resultado.idP}}" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                  <p>Fecha</p>
+                    <input type="date" name="fecha" value="{{resultado.fecha}}" class="form-control" readonly>
+                  </div>
+                  <div class="form-group">
+                      <p>Altura</p>
+                        <input type="text" name="altura" value="{{resultado.longitud}}" class="form-control" required>
+                      </div>
+                      <div class="form-group">
+                          <p>Anchura</p>
+                            <input type="text" name="anchura" value="{{resultado.anchura}}" class="form-control" required>
+                          </div>
+                          <div class="form-group">
+                              <p>Rojo</p>
+                                <input type="text" name="rojo" value="{{resultado.rojo}}" class="form-control" required>
+                              </div>
+                              <div class="form-group">
+                                  <p>Verde</p>
+                                    <input type="text" name="verde" value="{{resultado.verde}}" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <p>Azul</p>
+                                        <input type="text" name="azul" value="{{resultado.azul}}" class="form-control" required>
+                                      </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">
+              Actualizar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <style>
+      body {
+      background: #2c3e50;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #2c3e50, #2c3e50);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #2c3e50, #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    }</style>
+{% endblock %}

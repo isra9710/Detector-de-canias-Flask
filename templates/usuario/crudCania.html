@@ -1,0 +1,82 @@
+
+            {% extends "administrador/layCan.html" %}
+            {% block body %}    
+              <div class="row">
+                <div class="col-md-5">
+                  {% with messages = get_flashed_messages()  %}
+                  {% if messages %}
+                  {% for message in messages %}
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                  {% endwith %}
+                  <div class="card card-body">
+                      <h3>Agregar experimento</h3>
+                      <form action="/experimento" method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                          <input type='file' name="file" id="file" onchange="readURL(this);" required/>
+                          <img id="blah" src="#" alt="your image" />
+                      </div>
+                      <button class="btn btn-primary btn-block">      
+                        Hacer Experimento 
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <table class="table table-striped table-hover table-bordered table-sm bg-white">
+                    <thead>
+                      <tr>
+                        <td>ID experimento</td>
+                        <td>ID usuario</td>
+                        <td>ID imagen</td>
+                        <td>Fecha</td>
+                        <td>Altura</td>
+                        <td>Anchura</td>
+                        <td>Rojo</td>
+                        <td>Verde</td>
+                        <td>Azul</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for resultado in resultados %}
+                      <tr>
+                        <td>{{resultado.idResultado}}</td>
+                        <td>{{resultado.idUsuario}}</td>
+                        <td>{{resultado.idP}}</td>
+                        <td>{{resultado.fecha}}</td>
+                        <td>{{resultado.longitud}}</td>
+                        <td>{{resultado.anchura}}</td>
+                        <td>{{resultado.rojo}}</td>
+                        <td>{{resultado.verde}}</td>
+                        <td>{{resultado.azul}}</td>
+                        <td>
+                          <a href="/llenarEditarExp/{{resultado.idResultado}}" class="btn btn-secondary">Editar</a>
+                          <a href="/eliminarExp/{{resultado.idResultado}}" class="btn btn-danger btn-delete">Eliminar</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <style>
+                body {
+                background: #2c3e50;  /* fallback for old browsers */
+                background: -webkit-linear-gradient(to right, #2c3e50, #2c3e50);  /* Chrome 10-25, Safari 5.1-6 */
+                background: linear-gradient(to right, #2c3e50, #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              
+              }</style>
+            
+            {% endblock %}
+            <link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+            <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+            <script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+    </body>
+</html>

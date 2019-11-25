@@ -287,9 +287,9 @@ def eliminarExp(id):
 def agregaRep():
     tipo = session['tipo']
     if tipo == "Administrador":
-        return render_template("administrador/fechaR.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+        return render_template("administrador/fechaR.html")
     else:
-        return render_template("usuario/fechaR.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+        return render_template("usuario/fechaR.html")
 
     return "hola"
 
