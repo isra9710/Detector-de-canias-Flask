@@ -1,78 +1,62 @@
 {% extends "administrador/layfotos.html" %}
 {% block body %}
-
-  <div class="row">
-    <div class="col-md-5">
-      {% with messages = get_flashed_messages()  %}
-      {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endfor %}
-      {% endif %}
-      {% endwith %}
-      
+<div class="row">
+    <div class="col-md-4 offset-md-4">
       <div class="card card-body">
-          <h3>Agregar experimento</h3>
-          <form action="/agregarUsuario" method="POST" >
-                <div class="form-group">
-                    <div class="row">
-                        <div class="column">
-                            <label>Imagen original</label>
-                            <img src="{{ url_for('static', filename=nombre) }}" style="width: 100%;" width="300">
-                        </div>
-                   
-                        <div class="column">
-                            <label >Anchura y altura</label>
-                            <img src="{{ url_for('static', filename=medida) }}" style="width: 100%;">
-                          </div>
-                        
-                          <div class="column">
-                                <label >Color de figura</label>
-                                <img src="{{ url_for('static', filename=color) }}" style="width: 100%;">
-                            </div>
-                          </div> 
+        <form action="/agregarExp" method="POST">
+          <div class="form-group">
+              <div class="row">
+                  <div class="column">
+                      <label>Imagen original</label>
+                      <img src="{{ url_for('static', filename=nombre) }}" style="width: 100%;" width="300">
+                        <input type="hidden" value="{{nombre}}" name="foto" id="foto">
+                    </div>
+             
+                  <div class="column">
+                      <label >Anchura y altura</label>
+                      <img src="{{ url_for('static', filename=medida) }}" style="width: 100%;">
+                      <input type="hidden" value="{{medida}}" name="medida" id="medida">
+                    </div>
+                  
+                    <div class="column">
+                          <label >Color de figura</label>
+                          <img src="{{ url_for('static', filename=color) }}" style="width: 100%;">
+                          <input type="hidden" value="{{color}}" name="color" id="color">
+                      </div>
+                    </div> 
+          </div>
+          <div class="form-group">
+              <p>Rojo</p>
+                <input type="text" name="rojo" value="{{colores[2]}}" class="form-control" readonly >
+              </div>  
+              <div class="form-group">
+                <p>Verde</p>  
+                <input type="text" name="verde" value="{{colores[1]}}" class="form-control" readonly >
                 </div>
                 <div class="form-group">
-                    <p>Rojo</p>
-                      <input type="text" name="R" value="{{colores[2]}}" class="form-control" readonly >
-                    </div>  
+                    <p>Azul</p>  
+                    <input type="text" name="azul" value="{{colores[0]}}" class="form-control" readonly >
+                  </div>
+                  <div class="form-group">
+                      <p>Altura</p>  
+                      <input type="text" name="altura" value="{{altura}}" class="form-control" readonly >
+                    </div>
                     <div class="form-group">
-                      <p>Verde</p>  
-                      <input type="text" name="nombre" value="{{colores[1]}}" class="form-control" readonly >
-                      </div>
-                      <div class="form-group">
-                          <p>Azul</p>  
-                          <input type="text" name="nombre" value="{{colores[0]}}" class="form-control" readonly >
-                        </div>
-                        <div class="form-group">
-                            <p>Altura</p>  
-                            <input type="text" name="nombre" value="{{altura}}" class="form-control" readonly >
-                          </div>
-                          <div class="form-group">
-                              <p>Anchura</p>  
-                              <input type="text" name="nombre" value="{{anchura}}" class="form-control" readonly >
-                            </div>    
-                            <button class="btn btn-primary btn-block">
-                                Guardar 
-                              </button>
+                        <p>Anchura</p>  
+                        <input type="text" name="anchura" value="{{anchura}}" class="form-control" readonly >
+                      </div>    
+                      <button class="btn btn-primary btn-block">
+                          Guardar 
+                        </button>
         </form>
       </div>
     </div>
-</div>
- 
-
-
-<style>
-    body {
-    background: #2c3e50;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2c3e50, #2c3e50);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2c3e50, #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  
-  }</style>
-
+  </div>
+  <style>
+      body {
+      background: #2c3e50;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #2c3e50, #2c3e50);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #2c3e50, #2c3e50); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    }</style>
 {% endblock %}

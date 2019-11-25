@@ -6,7 +6,7 @@ class Producto(db.Model):
     __tablename__ = 'Producto'
     idP = db.Column(db.Integer, primary_key=True)
     img = db.Column(db.String(300))
-    resultado = relationship ("Resultado", backref= "Producto")
+    resultado = relationship ("Resultado", uselist=False, backref= "Producto")
 
     def __init__(self, img):
         self.img = img

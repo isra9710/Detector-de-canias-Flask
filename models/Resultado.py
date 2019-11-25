@@ -12,19 +12,22 @@ class Resultado(db.Model):
     anchura = db.Column(db.Float)
     rojo = db.Column(db.Integer)
     verde = db.Column(db.Integer)
-    azul = db.Column(db.Integer) 
+    azul = db.Column(db.Integer)
+    imgM = db.Column(db.String(300))
+    imgC = db.Column(db.String(300)) 
+    img = relationship("Producto", back_populates="resultado")
 
 
-    def __init__(self, idUsuario, idProducto,longitud, anchura, rojo, verde, azul):
+    def __init__(self, idUsuario, idP,longitud, anchura, rojo, verde, azul, imgM, imgC):
         self.idUsuario = idUsuario
-        self.idProducto = idProducto
-        self.fecha = fecha
+        self.idP = idP
         self.longitud = longitud
         self.anchura = anchura
         self.rojo = rojo
         self.verde = verde
         self.azul = azul
-
+        self.imgM = imgM
+        self.imgC = imgC
 
     def __repr__(self):
         return ''

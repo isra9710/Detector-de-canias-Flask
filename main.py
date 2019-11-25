@@ -20,28 +20,37 @@ from config import *  # en el archivo config se encuentran importadas todas las 
 from models.Shared import db  # se importa el objeto de SQLAlchemy para tenerlo en todos los modulos que se necesiten
 
 
-@app.route("/")
+@app.route("/")#Este decorador nos lleva a la página principal que es el login
 def index():
    return render_template("login.html")
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])#Este decorador llama a la función para validar los datos de inicio de sesión
 def login():
     usuario = Usuario.query.filter_by(nombreUsuario=request.form['usuario']).first()
     if usuario:
         if usuario.contra == request.form.get("contra"):
+            session['username'] = request.form['usuario']#Con el uso de sesiones se guardan datos
+            session['id'] = usuario.idUsuario#en estas tres líneas se guarda el nombre de usuario, el id del mismo
+            session['tipo'] = usuario.tipo# y por último el tipo de usuario
             if usuario.tipo == "Administrador":
-                session['username'] = request.form['usuario']
                 return redirect((url_for('homeAdmin')))
             elif usuario.tipo == "Empleado":
-                session['username'] = request.form['usuario']
                 return redirect((url_for('homeEmpleado')))
         else:
-            flash("Usuario o contraseña incorrecta")
+            flash("Usuario o contraseña incorrecta")#Con la palabra reservada flash se mandan mensajes hacia el html
             return redirect((url_for('index')))
     else:
         flash("Usuario o contraseña incorrecta")
         return redirect((url_for('index')))
+
+
+@app.route("/logout")
+def logout():
+    session.pop('username')
+    session.pop('id')
+    session.pop('tipo')
+    return redirect((url_for('index')))
 
 
 @app.route("/homeAdmin")
@@ -49,40 +58,40 @@ def homeAdmin():
     return render_template("administrador/home.html")
 
 
-@app.route("/crudUsuario", methods=['GET', 'POST'])
+@app.route("/crudUsuario", methods=['GET', 'POST'])#Este decorador nos muestra la página principal para el crud de usuarios
 def crudUsuario():
-    usuarios = Usuario.query.all()
-    return render_template("administrador/crudUsuario.html", usuarios = usuarios)
+    usuarios = Usuario.query.all()#Se hace una consulta a la base de datos, regresando una lista
+    return render_template("administrador/crudUsuario.html", usuarios = usuarios)#por éso el nombre en plural
 
 
 @app.route("/agregarUsuario", methods=['GET', 'POST'])
 def agregarUsuario():
     if  request.method == 'POST': 
-        usuario = Usuario.query.filter_by(nombreUsuario=request.form["nombre"]).first()
-        if usuario:
+        usuario = Usuario.query.filter_by(nombreUsuario=request.form["nombre"]).first()#Se valida que el usuario a registrar no esté en la base de datos mediante una consulta
+        if usuario:#Si el usuario existe, se regresa a la página con un mensaje de no registrado
             flash("Ese nombre de usuario ya existe ya existe")
             return redirect((url_for('crudUsuario')))
         else:
-            usuario = Usuario(request.form.get("nombre"), request.form.get("contra"),"Empleado")
+            usuario = Usuario(request.form.get("nombre"), request.form.get("contra"),"Empleado")#Si no con los datos del html se crea un nuevo objeto haciendo uso de su constructor
             flash("Se agregó usuario con éxito")
-            db.session.add(usuario)
-            db.session.commit()
+            db.session.add(usuario)#Se hace uso del objeto y con el ORM se añade el objeto con los datos a la base
+            db.session.commit()#Se afirma la actualización de datos
             return redirect((url_for('crudUsuario')))
     else:      
         flash("No se agregó usuario con éxito")  
         return redirect((url_for('crudUsuario')))
         
 
-@app.route("/llenarEditarUsuario/<string:id>", methods=['Get', 'POST'])
-def llenarEditarUsuario(id):
-    usuario = Usuario.query.filter_by(idUsuario=id).first()
+@app.route("/llenarEditarUsuario/<string:id>", methods=['Get', 'POST'])#Este decorador recibe un id del form
+def llenarEditarUsuario(id):#Lo maneja en la función
+    usuario = Usuario.query.filter_by(idUsuario=id).first()#Se hace una consulta para poder mostrar los datos del objeto en otro html
     return render_template("administrador/editarUsuario.html", usuario = usuario)
 
 
-@app.route("/editarUsuario", methods=['GET', 'POST'])
+@app.route("/editarUsuario", methods=['GET', 'POST'])#Esta función se encarga de llamar a la función para editar
 def editarUsuario():
-    usuarioO = Usuario.query.filter_by(idUsuario=request.form['id']).first()
-    if validarNombreU(usuarioO.nombreUsuario, request.form['nombre']):
+    usuarioO = Usuario.query.filter_by(idUsuario=request.form['id']).first()#se crea un objeto "Original"
+    if validarNombreU(usuarioO.nombreUsuario, request.form['nombre']):#Se valida el nombre del usuario para que no se repitan
         usuarioO.nombreUsuario = request.form['nombre']
         usuarioO.tipo = request.form['tipo']
         flash("Usuario editado con éxtio")
@@ -93,7 +102,7 @@ def editarUsuario():
         return redirect((url_for('crudUsuario')))
 
 
-def validarNombreU(nombreO, nombreN):
+def validarNombreU(nombreO, nombreN):#Esta función sirve para validar nombres, recibiendo el nombre original y el nuevo nombre como parametro
     usuarioO = Usuario.query.filter_by(nombreUsuario=nombreO).first()
     if nombreO == nombreN:
         return True
@@ -133,15 +142,13 @@ def experimento():
     if request.method == "POST":
         f = request.files['file']
         nombre = agregarImagen(f)
-        image = cv2.imread("static/" + nombre)#Se lee la imagen
+        image = cv2.imread("static/" + nombre)#Se lee la imagen para las medidas
         image = imutils.resize(image,width=300, height=500)#Se redimensiona
-        img = cv2.imread("static/" + nombre,1)
-        img = imutils.resize(img,width=300, height=500)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)#
-        gris = gray
+        img = cv2.imread("static/" + nombre,1)#Se lee la imagen para el color
+        img = imutils.resize(img,width=300, height=500)#Se redimensiona
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)#Se aplica cambio de BGR a Grises
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
         edged = cv2.Canny(gray, 50, 100)
-        bordes = edged
         edged = cv2.dilate(edged, None, iterations=1)
         edged = cv2.erode(edged, None, iterations=1)
         cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
@@ -152,8 +159,7 @@ def experimento():
         array = ""
         dimA = ""
         dimB = ""
-        for c in cnts:
-            
+        for c in cnts:     
             if cv2.contourArea(c) < 100:
                 continue
             i= i+1
@@ -190,9 +196,9 @@ def experimento():
             cv2.putText(orig, str (dimB) + "cm",
                 (int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
                 0.65, (255, 255, 255), 2)
-            if i == 2:
-                if cv2.contourArea(c) >800: # filter small contours
-                    x,y,w,h = cv2.boundingRect(c) # offsets - with this you get 'mask'
+            if i == 2:#Sólo nos sirve el segundo borde encontrado, es decir la segunda figura encontrada
+                if cv2.contourArea(c) >800: 
+                    x,y,w,h = cv2.boundingRect(c) # Con ésto se obtiene la máscara
                     cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
                     print('Color promdio de la figura (Azul, Verde, Rojo): ',np.array(cv2.mean(img[y:y+h,x:x+w])).astype(np.uint8))
                     array = np.array(cv2.mean(img[y:y+h,x:x+w])).astype(np.uint8)
@@ -204,20 +210,82 @@ def experimento():
             uuid.uuid4()) + ".png"  # uuid4 regresa un objeto, no una cadena. Por eso lo convertimos
         guardar = "static/" + nombreC
         cv2.imwrite(guardar, img)
-        flash("Antes de guardar el experimento asegurate de que la imagen fue procesada de manera adecuada")
-        return render_template("administrador/ver.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+        tipo = session['tipo']
+        if tipo == "Administrador":
+            flash("Antes de guardar el experimento asegurate de que la imagen fue procesada de manera adecuada")
+            return render_template("administrador/ver.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
+        else:
+            flash("Antes de guardar el experimento asegurate de que la imagen fue procesada de manera adecuada")
+            return render_template("usuario/ver.html", nombre = nombre, medida = nombreM, color = nombreC, colores = array, anchura = dimB, altura = dimA)
 
 
 @app.route("/agregarExp", methods=['GET','POST'])
 def agregarExp():
     if  request.method == 'POST':
         nombre = session['username']
+        producto = Producto(request.form.get("foto"))
+        db.session.add(producto)
+        db.session.commit()
+        producto = Producto.query.filter_by(img = request.form.get("foto")).first()
+        idUsuario = session['id']
+        print(producto.idP)
+        resultado = Resultado(idUsuario, producto.idP,float(request.form.get("altura")), float(request.form.get("anchura")), int(request.form.get("rojo")), int(request.form.get("verde")), int(request.form.get("azul")), request.form.get("medida"), request.form.get("color") )
+        db.session.add(resultado)
+        db.session.commit()
+        flash("La Experimentación se hizo con éxito")
+        return redirect((url_for('crudCania')))
 
 
+@app.route("/llenarEditarExp/<string:id>", methods=['Get', 'POST'])
+def llenarEditarExp(id):
+    resultado = Resultado.query.filter_by(idResultado = id).first()
+    tipo = session['tipo']
+    if tipo == "Administrador":
+        return render_template("administrador/editarExp.html", resultado = resultado)
+    else:
+        return render_template("usuario/editarExp.html", resultado = resultado)
 
+
+@app.route("/editarExp", methods=['GET', 'POST'])#Esta función se encarga de llamar a la función para editar
+def editarExp():
+        idR = request.form.get("id")
+        resultado = Resultado.query.filter_by(idResultado = idR).first()
+        altura = request.form.get("altura")
+        anchura = request.form.get("anchura")
+        rojo = request.form.get("rojo")
+        verde = request.form.get("verde")
+        azul = request.form.get("azul")
+        resultado.longitud = altura
+        resultado.anchura = anchura
+        resultado.rojo = rojo
+        resultado.verde = verde
+        resultado.azul = azul
+        flash("Experimento editado con éxtio")
+        db.session.commit()
+        return redirect((url_for('crudCania')))
+    
+
+@app.route("/eliminarExp/<string:id>", methods=['GET', 'POST'])
+def eliminarExp(id):
+    resultado = Resultado.query.filter_by(idResultado=id).first()
+    imagen = Producto.query.filter_by(idP = resultado.idP).first()
+    db.session.delete(resultado)
+    db.session.delete(imagen)
+    ruta = "static/"
+    img = ruta + imagen.img
+    med = ruta + resultado.imgM
+    col = ruta + resultado.imgC
+    remove(img)
+    remove(med)
+    remove(col)
+    db.session.commit()
+    flash("Experimento eliminado con éxito")
+    return redirect((url_for('crudCania')))
+          
 
 @app.route("/agregaRep", methods=['GET','POST'])
 def agregaRep():
+    print("Hola")
     return "hola"
 
 
