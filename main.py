@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, flash, redirect, url_for
 import os
 from os import remove
+import datetime
 import cv2
 import uuid
 from scipy.spatial import distance as dist
@@ -11,7 +12,9 @@ import argparse
 import imutils
 import cv2
 from matplotlib import pyplot as plt
-import pdfkit
+import flask_weasyprint
+from flask_weasyprint import HTML, render_pdf
+from sqlalchemy import or_
 app = Flask(__name__)
 SECRET_KEY = "my_secret_key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/cania'  # conexion con la base de datos
@@ -56,6 +59,10 @@ def logout():
 @app.route("/homeAdmin")
 def homeAdmin():
     return render_template("administrador/home.html")
+
+@app.route("/homeUs")
+def homeUs():
+    return render_template("usuario/home.html")
 
 
 @app.route("/crudUsuario", methods=['GET', 'POST'])#Este decorador nos muestra la página principal para el crud de usuarios
@@ -133,8 +140,12 @@ def agregarImagen(f):
 
 @app.route("/crudCania", methods=['GET','POST'])
 def crudCania():
+    tipo = session['tipo']
     resultados = Resultado.query.all()
-    return render_template("administrador/crudCania.html", resultados=resultados)
+    if tipo == "Administrador":
+        return render_template("administrador/crudCania.html", resultados=resultados)
+    else: 
+        return render_template("usuario/crudCania.html", resultados=resultados)
 
 
 @app.route("/experimento", methods=['GET','POST'])
@@ -291,7 +302,39 @@ def agregaRep():
     else:
         return render_template("usuario/fechaR.html")
 
-    return "hola"
+
+@app.route("/generarReporte", methods=['GET', 'POST'])
+def generarReporte():
+    tipo = session['tipo']
+    resultados = ""
+    fecha = ""
+    if request.form.get("fechaDia") is not None:
+        fecha = request.form.get("fechaDia")
+        session ['fecha'] = fecha
+        resultados = Resultado.query.filter_by(fecha = fecha).all()
+    else:
+        fecha = request.form.get("fechaS")
+        session['fecha'] = fecha
+        fecha2 = fecha + datetime.timedelta(days=7)
+        session['fecha2'] = fecha2
+    if tipo == "Administrador":
+        return render_template("administrador/reporte.html", resultados = resultados, fecha = fecha, fecha2 = None)
+    else: 
+        return render_template("usuario/reporte.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
+
+
+@app.route("/generarPDF", methods=['GET', 'POST'])
+def generarPDF():
+    fecha = session['fecha']
+    fecha2 = session['fecha2']
+    resultados = ""
+    if fecha2 is None:
+        resultados = Resultado.query.filter_by(fecha = fecha).all()
+        html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = None)
+    else:
+        resultados = filter(or_(Resultado.fecha == fecha, Resultado.fecha == fecha2))
+        html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = None)
+    return render_pdf(HTML(string=html))
 
 
 if __name__ == '__main__':

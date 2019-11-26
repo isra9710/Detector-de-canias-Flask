@@ -1,6 +1,8 @@
 from sqlalchemy.orm import relationship
+from sqlalchemy import DateTime
 from models.Shared import db
-from datetime import date
+import datetime
+from datetime import date, time
 
 class Resultado(db.Model):
     __tablename__ = 'Resultado'
@@ -8,6 +10,7 @@ class Resultado(db.Model):
     idUsuario = db.Column('idUsuario', db.Integer, db.ForeignKey("Usuario.idUsuario"))
     idP = db.Column('idP', db.Integer, db.ForeignKey("Producto.idP"))
     fecha = db.Column(db.Date,default=date.today)
+    hora = db.Column(db.DateTime, default=datetime.datetime.now())
     longitud = db.Column(db.Float)
     anchura = db.Column(db.Float)
     rojo = db.Column(db.Integer)

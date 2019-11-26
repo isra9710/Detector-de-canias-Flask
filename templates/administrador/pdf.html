@@ -1,0 +1,55 @@
+<html>
+ <head>
+   <title>Reporte</title>
+   <style>
+     h1 {
+       text-align: center;
+     }
+
+     table {
+       border: 1px solid;
+       margin: 0 auto;
+       width: 70%;
+     }
+
+     td, th {
+       text-align: center;
+       border: 1px solid;
+     }
+   </style>
+ </head>
+ <body>
+   <h1>Lista de experimentos</h1>
+   <table>
+     <thead>
+       <tr>
+         <th>ID Resultado</th>
+         <th>ID Usuario</th>
+         <th>ID Imagen</th>
+         <th>Fecha y hora</th>
+         <th>Altura</th>
+         <th>Anchura</th>
+         <th>Rojo</th>
+         <th>Verde</th>
+         <th>Azul</th>
+       </tr>
+     </thead>
+     <tbody>
+       {% for resultado in resultados %}
+         <tr>
+            <td>{{ resultado.idResultado }}</td>
+           <td>{{ resultado.idUsuario }}</td>
+           <td>{{ resultado.idP }}</td>
+           <td>{{ resultado.hora }}</td>
+           <td>{{ resultado.longitud }}</td>
+           <td>{{ resultado.anchura }}</td>
+           <td>{{ resultado.rojo }}</td>
+           <td>{{ resultado.verde }}</td>
+           <td>{{ resultado.azul }}</td>
+         </tr>
+       {% endfor %}    
+     </tbody>
+   </table>
+   <footer>{{fecha}}  {{fecha2}} Sistema de extracción de caracteristicas de la caña de azúcar</footer>
+ </body>
+</html>
