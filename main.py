@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, flash, redirect, url
 import os
 from os import remove
 import datetime
+from datetime import date
 import cv2
 import uuid
 from scipy.spatial import distance as dist
@@ -14,7 +15,7 @@ import cv2
 from matplotlib import pyplot as plt
 import flask_weasyprint
 from flask_weasyprint import HTML, render_pdf
-from sqlalchemy import or_
+from sqlalchemy import or_, Date, cast
 app = Flask(__name__)
 SECRET_KEY = "my_secret_key"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/cania'  # conexion con la base de datos
@@ -308,16 +309,21 @@ def generarReporte():
     tipo = session['tipo']
     resultados = ""
     fecha = ""
+    fecha2 =""
     if request.form.get("fechaDia") is not None:
         fecha = request.form.get("fechaDia")
         session ['fecha'] = fecha
         resultados = Resultado.query.filter_by(fecha = fecha).all()
     else:
         fecha = request.form.get("fechaS")
+        print(fecha)
         session['fecha'] = fecha
-        fecha2 = fecha + datetime.timedelta(days=7)
-        session['fecha2'] = fecha2
-    if tipo == "Administrador":
+        fechaS = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        fe = fechaS + datetime.timedelta(days=7)
+        session['fecha2'] = str(fe)
+        fecha2 = str(fe)
+        resultados = Resultado.query.filter(Resultado.fecha.between(fecha, fecha2)).all()
+    if fecha2 == None:
         return render_template("administrador/reporte.html", resultados = resultados, fecha = fecha, fecha2 = None)
     else: 
         return render_template("usuario/reporte.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
@@ -332,8 +338,8 @@ def generarPDF():
         resultados = Resultado.query.filter_by(fecha = fecha).all()
         html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = None)
     else:
-        resultados = filter(or_(Resultado.fecha == fecha, Resultado.fecha == fecha2))
-        html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = None)
+        resultados = Resultado.query.filter(Resultado.fecha.between(fecha, fecha2)).all()
+        html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
     return render_pdf(HTML(string=html))
 
 
