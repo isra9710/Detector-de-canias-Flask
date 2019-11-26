@@ -49,11 +49,11 @@ def login():
         return redirect((url_for('index')))
 
 
-@app.route("/logout")#Decorador para cerrar sesión
+@app.route("/logout", methods=['GET', 'POST'])#Decorador para cerrar sesión
 def logout():
-    session.pop('username')#Destruye todos los datos
-    session.pop('id')#Generados durante
-    session.pop('tipo')#La sesión
+    session.pop('username', None)#Destruye todos los datos
+    session.pop('id', None)#Generados durante
+    session.pop('tipo', None)#La sesión
     return redirect((url_for('index')))
 
 
@@ -323,16 +323,18 @@ def generarReporte():
         session['fecha2'] = str(fe)
         fecha2 = str(fe)
         resultados = Resultado.query.filter(Resultado.fecha.between(fecha, fecha2)).all()
-    if fecha2 == None:
-        return render_template("administrador/reporte.html", resultados = resultados, fecha = fecha, fecha2 = None)
-    else: 
+    if tipo == "Administrador":
+        return render_template("administrador/reporte.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
+    else:
         return render_template("usuario/reporte.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
 
 
 @app.route("/generarPDF", methods=['GET', 'POST'])
 def generarPDF():
     fecha = session['fecha']
-    fecha2 = session['fecha2']
+    fecha2 = None
+    if 'fecha2' in session:
+        fecha2 = session['fecha2']
     resultados = ""
     if fecha2 is None:
         resultados = Resultado.query.filter_by(fecha = fecha).all()
@@ -340,6 +342,8 @@ def generarPDF():
     else:
         resultados = Resultado.query.filter(Resultado.fecha.between(fecha, fecha2)).all()
         html = render_template("pdf.html", resultados = resultados, fecha = fecha, fecha2 = fecha2)
+    session.pop('fecha', None)
+    session.pop('fecha2', None)
     return render_pdf(HTML(string=html))
 
 
